@@ -30,6 +30,23 @@ def get_recipe(recipe_id: int, db: Session = Depends(get_db)) -> RecipeSummary:
     return recipe
 
 
+@router.get("/search", response_model=RecipeListResponse)
+def search_recipes(
+    category: str | None = None,
+    difficulty: str | None = None,
+    max_servings: int | None = None,
+    db: Session = Depends(get_db),
+) -> RecipeListResponse:
+    query = db.query(Recipe)
+    if category:
+        query = query.filter(Recipe.category == category)
+    if difficulty:
+        query = query.filter(Recipe.difficulty == difficulty)
+    if max_servings is not None:
+        query = query.filter(Recipe.servings <= max_servings)
+    return RecipeListResponse(items=query.all())
+
+
 @router.post("", response_model=RecipeSummary, status_code=201, dependencies=[Depends(verify_api_key)])
 def create_recipe(payload: RecipeCreate, db: Session = Depends(get_db)) -> RecipeSummary:
     recipe = Recipe(**payload.model_dump())

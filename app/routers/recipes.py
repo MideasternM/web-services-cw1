@@ -19,17 +19,6 @@ def list_recipes(db: Session = Depends(get_db)) -> RecipeListResponse:
     return RecipeListResponse(items=db.query(Recipe).all())
 
 
-@router.get("/{recipe_id}", response_model=RecipeSummary)
-def get_recipe(recipe_id: int, db: Session = Depends(get_db)) -> RecipeSummary:
-    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
-    if recipe is None:
-        raise HTTPException(
-            status_code=404,
-            detail={"error": "RESOURCE_NOT_FOUND", "message": f"Recipe with id {recipe_id} was not found"},
-        )
-    return recipe
-
-
 @router.get("/search", response_model=RecipeListResponse)
 def search_recipes(
     category: str | None = None,
@@ -45,6 +34,17 @@ def search_recipes(
     if max_servings is not None:
         query = query.filter(Recipe.servings <= max_servings)
     return RecipeListResponse(items=query.all())
+
+
+@router.get("/{recipe_id}", response_model=RecipeSummary)
+def get_recipe(recipe_id: int, db: Session = Depends(get_db)) -> RecipeSummary:
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    if recipe is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "RESOURCE_NOT_FOUND", "message": f"Recipe with id {recipe_id} was not found"},
+        )
+    return recipe
 
 
 @router.post("", response_model=RecipeSummary, status_code=201, dependencies=[Depends(verify_api_key)])
@@ -107,6 +107,30 @@ def add_ingredient_to_recipe(
     db.add(link)
     db.commit()
     return {"status": "linked"}
+
+
+@router.delete(
+    "/{recipe_id}/ingredients/{ingredient_id}",
+    status_code=204,
+    dependencies=[Depends(verify_api_key)],
+)
+def remove_ingredient_from_recipe(recipe_id: int, ingredient_id: int, db: Session = Depends(get_db)) -> None:
+    link = (
+        db.query(RecipeIngredient)
+        .filter(RecipeIngredient.recipe_id == recipe_id, RecipeIngredient.ingredient_id == ingredient_id)
+        .first()
+    )
+    if link is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "RESOURCE_NOT_FOUND",
+                "message": f"Ingredient {ingredient_id} was not linked to recipe {recipe_id}",
+            },
+        )
+
+    db.delete(link)
+    db.commit()
 
 
 @router.get("/{recipe_id}/nutrition", response_model=RecipeNutritionResponse)

@@ -1,6 +1,15 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class RecipeCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    description: str = ""
+    category: str = Field(min_length=1, max_length=50)
+    difficulty: str = Field(pattern="^(easy|medium|hard)$")
+    servings: int = Field(gt=0)
+    instructions: str = ""
 
 
 class RecipeSummary(BaseModel):

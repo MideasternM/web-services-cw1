@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.security import verify_api_key
 from app.db.database import get_db
 from app.models.recipe import Recipe
-from app.schemas.recipe import RecipeListResponse, RecipeSummary
+from app.schemas.recipe import RecipeCreate, RecipeListResponse, RecipeSummary
 
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -22,4 +23,13 @@ def get_recipe(recipe_id: int, db: Session = Depends(get_db)) -> RecipeSummary:
             status_code=404,
             detail={"error": "RESOURCE_NOT_FOUND", "message": f"Recipe with id {recipe_id} was not found"},
         )
+    return recipe
+
+
+@router.post("", response_model=RecipeSummary, status_code=201, dependencies=[Depends(verify_api_key)])
+def create_recipe(payload: RecipeCreate, db: Session = Depends(get_db)) -> RecipeSummary:
+    recipe = Recipe(**payload.model_dump())
+    db.add(recipe)
+    db.commit()
+    db.refresh(recipe)
     return recipe

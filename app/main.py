@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 
 from app.db.database import Base, engine
-from app.models.recipe import Recipe
+from app.routers import ingredients
 from app.routers import recipes
+from app.models import ingredient, recipe
 
 app = FastAPI(title="Nutrition and Recipe Analytics API")
 Base.metadata.create_all(bind=engine)
 app.include_router(recipes.router)
+app.include_router(ingredients.router)
 
 
 @app.get("/health")

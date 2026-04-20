@@ -1,0 +1,9 @@
+{
+  "name": "nutrition-api-slides",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}

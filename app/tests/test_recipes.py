@@ -103,3 +103,67 @@ def test_delete_recipe_returns_204_and_resource_disappears() -> None:
 
     get_response = client.get(f"/recipes/{recipe_id}")
     assert get_response.status_code == 404
+
+
+def test_recipe_nutrition_aggregates_ingredient_values() -> None:
+    recipe_response = client.post(
+        "/recipes",
+        json={
+            "name": "Banana Yogurt Bowl",
+            "description": "Simple bowl",
+            "category": "breakfast",
+            "difficulty": "easy",
+            "servings": 2,
+            "instructions": "Mix ingredients",
+        },
+        headers={"X-API-Key": "dev-secret-key"},
+    )
+    recipe_id = recipe_response.json()["id"]
+
+    yogurt = client.post(
+        "/ingredients",
+        json={
+            "name": "Yogurt",
+            "calories_per_100g": 60,
+            "protein_per_100g": 10,
+            "fat_per_100g": 2,
+            "carbs_per_100g": 4,
+            "contains_allergen": True,
+            "allergen_notes": "milk",
+        },
+        headers={"X-API-Key": "dev-secret-key"},
+    ).json()
+
+    banana = client.post(
+        "/ingredients",
+        json={
+            "name": "Banana",
+            "calories_per_100g": 89,
+            "protein_per_100g": 1.1,
+            "fat_per_100g": 0.3,
+            "carbs_per_100g": 22.8,
+            "contains_allergen": False,
+            "allergen_notes": "",
+        },
+        headers={"X-API-Key": "dev-secret-key"},
+    ).json()
+
+    link_yogurt = client.post(
+        f"/recipes/{recipe_id}/ingredients",
+        json={"ingredient_id": yogurt["id"], "quantity_g": 200},
+        headers={"X-API-Key": "dev-secret-key"},
+    )
+    link_banana = client.post(
+        f"/recipes/{recipe_id}/ingredients",
+        json={"ingredient_id": banana["id"], "quantity_g": 100},
+        headers={"X-API-Key": "dev-secret-key"},
+    )
+
+    assert link_yogurt.status_code == 201
+    assert link_banana.status_code == 201
+
+    response = client.get(f"/recipes/{recipe_id}/nutrition")
+
+    assert response.status_code == 200
+    assert response.json()["total"]["calories"] == 209.0
+    assert response.json()["per_serving"]["calories"] == 104.5

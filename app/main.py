@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from app.db.database import Base, engine
 from app.routers import ingredients
 from app.routers import recipes
-from app.models import ingredient, recipe
+from app.models import ingredient, recipe, recipe_ingredient
 
 app = FastAPI(title="Nutrition and Recipe Analytics API")
 Base.metadata.create_all(bind=engine)

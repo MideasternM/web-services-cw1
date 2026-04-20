@@ -3,8 +3,12 @@ from sqlalchemy.orm import Session
 
 from app.core.security import verify_api_key
 from app.db.database import get_db
+from app.models.ingredient import Ingredient
 from app.models.recipe import Recipe
+from app.models.recipe_ingredient import RecipeIngredient
+from app.schemas.nutrition import RecipeIngredientCreate, RecipeNutritionResponse
 from app.schemas.recipe import RecipeCreate, RecipeListResponse, RecipeSummary
+from app.services.nutrition import build_recipe_nutrition
 
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -63,3 +67,37 @@ def delete_recipe(recipe_id: int, db: Session = Depends(get_db)) -> None:
 
     db.delete(recipe)
     db.commit()
+
+
+@router.post("/{recipe_id}/ingredients", status_code=201, dependencies=[Depends(verify_api_key)])
+def add_ingredient_to_recipe(
+    recipe_id: int, payload: RecipeIngredientCreate, db: Session = Depends(get_db)
+) -> dict[str, str]:
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    ingredient = db.query(Ingredient).filter(Ingredient.id == payload.ingredient_id).first()
+    if recipe is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "RESOURCE_NOT_FOUND", "message": f"Recipe with id {recipe_id} was not found"},
+        )
+    if ingredient is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "RESOURCE_NOT_FOUND", "message": f"Ingredient with id {payload.ingredient_id} was not found"},
+        )
+
+    link = RecipeIngredient(recipe_id=recipe_id, ingredient_id=payload.ingredient_id, quantity_g=payload.quantity_g)
+    db.add(link)
+    db.commit()
+    return {"status": "linked"}
+
+
+@router.get("/{recipe_id}/nutrition", response_model=RecipeNutritionResponse)
+def get_recipe_nutrition(recipe_id: int, db: Session = Depends(get_db)) -> RecipeNutritionResponse:
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    if recipe is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "RESOURCE_NOT_FOUND", "message": f"Recipe with id {recipe_id} was not found"},
+        )
+    return build_recipe_nutrition(recipe, db)

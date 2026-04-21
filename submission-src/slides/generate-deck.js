@@ -4,7 +4,8 @@ const PptxGenJS = require("pptxgenjs");
 const deckContent = require("./content/deck-content");
 
 const PPTX = new PptxGenJS();
-const OUT_DIR = path.join(__dirname, "output");
+const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
+const OUT_DIR = path.join(PROJECT_ROOT, "slides");
 const ASSET_DIR = path.join(__dirname, "assets");
 
 const COLORS = {

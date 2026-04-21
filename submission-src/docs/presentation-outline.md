@@ -1,6 +1,6 @@
 # Presentation Outline and Speaking Notes
 
-This outline matches the generated 9-slide deck at `slides/output/nutrition-api-deck-updated.pptx`. It is designed for a concise 5-minute presentation, leaving the remaining oral-exam time for questions.
+This outline matches the generated 9-slide deck at `slides/nutrition-api-deck-updated.pptx`. It is designed for a concise 5-minute presentation, leaving the remaining oral-exam time for questions.
 
 ## Slide 1: Nutrition and Recipe Analytics API
 

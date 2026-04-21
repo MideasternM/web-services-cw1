@@ -91,4 +91,22 @@ The supporting submission structure also includes a generated technical report P
 
 ## 9. Generative AI Declaration
 
-Generative AI was used as an active development aid across planning, architecture exploration, implementation sequencing, and documentation drafting. It was used to compare backend stack options, refine the project scope around a domain that could support both CRUD and analytics, structure the implementation into manageable milestones, and improve the written presentation of the design. AI assistance was also used during debugging and documentation review. Final judgement over scope, trade-offs, and acceptance of generated outputs remained with the student, and all AI use should be declared alongside representative conversation logs in the final submitted appendix.
+Generative AI was used as an active development aid across planning, architecture exploration, implementation sequencing, and documentation drafting. It was used to compare backend stack options, refine the project scope around a domain that could support both CRUD and analytics, structure the implementation into manageable milestones, and improve the written presentation of the design. AI assistance was also used during debugging and documentation review. Final judgement over scope, trade-offs, and acceptance of generated outputs remained with the student. Appendix A provides representative translated excerpts from the development conversation in order to document how GenAI was used during the coursework process.
+
+## Appendix A. Representative GenAI Interaction Log
+
+The original development conversation was conducted mainly in Chinese. The excerpts below are concise English translations selected to show requirement checking, technology choice, revision requests, and reflective use of AI rather than passive acceptance of generated output.
+
+1. **Requirement framing and grade target.** The student first asked for a plan aimed at a 70+ outcome and then questioned whether the backend choice needed to follow any specific expectation from teaching, noting that Django had been discussed in class. This interaction showed an attempt to align the implementation with both the marking goal and the module context before committing to a stack.
+
+2. **Technology selection after comparison.** After considering options, the student explicitly chose `FastAPI + SQLite`. This was not a random acceptance of the first suggestion. It reflected a deliberate preference for an API-first framework that would be easier to demonstrate live while still satisfying the SQL-backed coursework requirement.
+
+3. **Submission packaging decisions.** The student then asked for the API documentation and report to be written in LaTeX and also requested a detailed prompt for generating presentation slides. This showed an understanding that a strong submission depended not only on working code but also on presentation quality, documentation quality, and clean packaging of deliverables.
+
+4. **Presentation revision based on the brief.** When the first presentation draft still looked too simple, the student asked for another pass after checking the coursework requirements, specifically noting that the slides should contain stronger visuals and more carefully written text. This prompted a second design cycle focused on assessment fit rather than cosmetic changes alone.
+
+5. **Demand for stronger evidence.** The student asked what the difference was between a real Swagger UI screenshot and the current OpenAPI-style visual, and also questioned whether an ER diagram and API response screenshots were needed. This directly led to replacing schematic visuals with stronger runtime evidence, which improved the academic credibility of the final slides.
+
+6. **Reflective AI declaration request.** In the final stage, the student asked whether the AI record should be placed on the last page of the report and requested wording that would show genuine thinking and learning rather than repetitive agreement. This shaped the appendix into a curated record of decision-making rather than a raw, low-signal transcript.
+
+These excerpts indicate that GenAI was used as a guided assistant rather than as an autonomous author. The student repeatedly checked requirements, questioned implementation choices, requested stronger evidence, and asked for revisions that better matched the coursework criteria. The final scope, architecture, acceptance of generated outputs, and submission decisions remained under student control.

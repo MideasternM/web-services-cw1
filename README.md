@@ -53,6 +53,16 @@ X-API-Key: dev-secret-key
 - Technical report PDF: `docs/technical-report.pdf`
 - Presentation deck: `slides/nutrition-api-deck-updated.pptx`
 - Supporting build sources: `submission-src/`
+- Deployment notes: `DEPLOYMENT.md`
+
+## Public Links
+
+- GitHub repository: `https://github.com/MideasternM/web-services-cw1`
+- PythonAnywhere deployment target: `https://MideasternM.pythonanywhere.com`
+- Swagger UI target: `https://MideasternM.pythonanywhere.com/docs`
+- API documentation PDF on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/docs/api-documentation.pdf`
+- Technical report PDF on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/docs/technical-report.pdf`
+- Presentation deck on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/slides/nutrition-api-deck-updated.pptx`
 
 ## Presentation
 

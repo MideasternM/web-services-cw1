@@ -5,13 +5,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.db import database as database_module
-from app.db.database import Base
+from app.db.database import Base, configure_sqlite_foreign_keys
 from app.main import app
 
 
 TEST_DATABASE_URL = "sqlite:///./test_nutrition.db"
 
 engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
+configure_sqlite_foreign_keys(engine)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

@@ -18,7 +18,42 @@ The main trade-off in this stack is that SQLite and a hardcoded API key are not 
 
 The application follows a layered structure with separate modules for routers, schemas, models, services, and database configuration. This separation improves readability and allows each layer to have a clear responsibility. Routers define HTTP behaviour, models define persistent entities, schemas define validated inputs and outputs, and services contain derived logic such as nutrition aggregation. This structure was chosen to support maintainability and to make the architecture easier to explain in the presentation and question-and-answer session.
 
+```mermaid
+flowchart LR
+    Client --> Routers
+    Routers --> Schemas
+    Schemas --> Services
+    Services --> Models
+    Models --> SQLite
+```
+
 The database design is based on three entities: `recipes`, `ingredients`, and `recipe_ingredients`. The `recipes` table stores general recipe information such as name, category, difficulty, servings, and instructions. The `ingredients` table stores nutrition information per 100 grams, including calories, protein, fat, carbohydrates, and allergen metadata. The `recipe_ingredients` table models the many-to-many relationship between the two and records the quantity of each ingredient used in a particular recipe.
+
+```mermaid
+erDiagram
+    recipes ||--o{ recipe_ingredients : uses
+    ingredients ||--o{ recipe_ingredients : appears_in
+    recipes {
+        int id
+        string name
+        string category
+        string difficulty
+        int servings
+    }
+    ingredients {
+        int id
+        string name
+        float calories_per_100g
+        float protein_per_100g
+        float fat_per_100g
+        float carbs_per_100g
+    }
+    recipe_ingredients {
+        int recipe_id
+        int ingredient_id
+        float quantity_g
+    }
+```
 
 This design was important because recipe nutrition should not be stored as hardcoded totals. Instead, totals are calculated from ingredient values and quantities. That decision improves data consistency and makes the analytical endpoints meaningful. It also demonstrates a more realistic use of relational modelling than a flat CRUD structure would.
 
@@ -50,9 +85,9 @@ Future improvements would therefore focus on three areas. First, authentication 
 
 ## 8. Version Control, Documentation, and Submission Readiness
 
-The repository has been developed with visible commit history so that the progression of the implementation can be inspected during marking. This is important because the coursework brief explicitly states that examiners will examine repository contents and commit history. The README provides setup instructions, run instructions, testing commands, authentication details, and seed-data usage. API documentation is available through FastAPI's generated OpenAPI interface and has also been captured in a Markdown document that can be converted into the required PDF submission format.
+The repository has been developed with visible commit history so that the progression of the implementation can be inspected during marking. This is important because the coursework brief explicitly states that examiners will examine repository contents and commit history. The README provides setup instructions, run instructions, testing commands, authentication details, and seed-data usage. API documentation is available through FastAPI's generated OpenAPI interface and has also been captured in a separate PDF submission document.
 
-The supporting submission structure also includes a technical report draft and a presentation outline. This means the repository now contains the main components needed to continue toward final submission: runnable source code, automated tests, visible version control, API documentation content, report content, and presentation material. The remaining work is largely formatting and polishing rather than major backend implementation.
+The supporting submission structure also includes a generated technical report PDF, a generated API documentation PDF, and a nine-slide presentation deck with matching speaking notes. The presentation material was strengthened with an entity-relationship diagram, a real browser capture of the FastAPI Swagger UI at `/docs`, and example API responses generated from the implemented endpoints. This means the repository now contains the main components needed for final submission: runnable source code, automated tests, visible version control, API documentation, report content, and presentation material. The remaining work is mainly final manual review rather than major backend implementation.
 
 ## 9. Generative AI Declaration
 

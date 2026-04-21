@@ -49,5 +49,15 @@ X-API-Key: dev-secret-key
 
 - Source code and commit history in this repository
 - API documentation through FastAPI OpenAPI and `/docs`
-- Technical report PDF to be added under `docs/`
-- Presentation slides to be added under `docs/`
+- API documentation PDF: `docs/api-documentation.pdf`
+- Technical report PDF: `docs/technical-report.pdf`
+- Presentation deck: `slides/output/nutrition-api-deck.pptx`
+- Presentation outline and speaking notes: `docs/presentation-outline.md`
+
+## Presentation
+
+Generated deck:
+`slides/output/nutrition-api-deck.pptx`
+
+Build notes:
+`docs/presentation-build-notes.md`

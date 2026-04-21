@@ -1,0 +1,27 @@
+\begin{figure}[htbp]
+\centering
+\setlength{\fboxsep}{7pt}
+\begin{tabular}{c c c}
+\fbox{\begin{minipage}{0.24\linewidth}
+\centering
+\textbf{recipes}\\
+\small id, name, category, difficulty, servings, instructions
+\end{minipage}}
+&
+\fbox{\begin{minipage}{0.26\linewidth}
+\centering
+\textbf{recipe\_ingredients}\\
+\small recipe\_id, ingredient\_id, quantity\_g
+\end{minipage}}
+&
+\fbox{\begin{minipage}{0.28\linewidth}
+\centering
+\textbf{ingredients}\\
+\small id, name, calories, protein, fat, carbs, allergen notes
+\end{minipage}}
+\\[0.3cm]
+\multicolumn{3}{c}{\small many recipes can use many ingredients; the join table stores the quantity used}
+\end{tabular}
+\caption{Relational model showing why recipe nutrition can be derived from ingredient quantities.}
+\label{fig:data-model}
+\end{figure}

@@ -1,0 +1,81 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{graphicx}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={Technical Report - Nutrition and Recipe Analytics API},
+    pdfauthor={Shuyu Cao}
+}
+
+\title{\textbf{Technical Report}\\Nutrition and Recipe Analytics API}
+\author{Shuyu Cao\\XJCO3011 Web Services and Web Data}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+\onehalfspacing
+
+\section{Introduction}
+This project implements a Nutrition and Recipe Analytics API for the XJCO3011 Web Services and Web Data coursework. The aim was to build a data-driven web service that satisfies the core coursework requirements while also demonstrating design decisions beyond a minimal CRUD application. The final system supports SQL-backed CRUD operations for recipes and ingredients, models many-to-many relationships between recipes and ingredients, and exposes analytical functionality that calculates nutrition summaries and category-level statistics.
+
+The project was intentionally scoped around nutrition and recipe data because this domain supports both transactional operations and analytical queries in a natural way. A single-table application would have been enough to satisfy only the most basic technical requirement, but it would not have demonstrated much database design, API reasoning, or architectural structure. In contrast, the chosen domain makes it possible to discuss relational modelling, validation, authentication, testing strategy, and endpoint design in a technically defensible way during the oral examination.
+
+\section{Technology Stack and Rationale}
+FastAPI was selected as the backend framework because the coursework is explicitly focused on web services rather than server-rendered pages. FastAPI provides strong request and response modelling, automatic validation, and built-in OpenAPI documentation through Swagger UI. This reduced the risk of inconsistencies between the implementation and the documented API, while also making the project easier to demonstrate.
+
+SQLite was chosen as the database because it satisfies the SQL requirement while keeping local execution simple and reliable. For a coursework submission that must be demonstrated live, reduced operational complexity is a practical advantage. SQLAlchemy was used to define database models and support relational queries, Pydantic was used for schema validation and response serialization, and pytest was adopted as the testing framework because it integrates cleanly with FastAPI's test client and supports repeatable endpoint verification.
+
+The main trade-off is that SQLite and a hardcoded API key are not production-grade choices for a larger deployed service. However, these decisions are appropriate for the coursework context because they prioritize correctness, clarity, and ease of demonstration over production-scale deployment concerns.
+
+\section{System Architecture and Data Model}
+The application follows a layered structure with separate modules for routers, schemas, models, services, and database configuration. This separation improves readability and gives each layer a clear responsibility. Routers define HTTP behaviour, models define persistent entities, schemas define validated input and output structures, and services contain derived logic such as nutrition aggregation. This modular structure was chosen because it supports maintainability and makes the architecture easier to explain during the presentation and question-and-answer session.
+
+\input{figures/architecture-flow}
+
+The database design uses three entities: \texttt{recipes}, \texttt{ingredients}, and \texttt{recipe\_ingredients}. The \texttt{recipes} table stores general recipe information such as name, category, difficulty, servings, and instructions. The \texttt{ingredients} table stores nutrition information per 100 grams, including calories, protein, fat, carbohydrates, and allergen metadata. The \texttt{recipe\_ingredients} table models the many-to-many relationship between recipes and ingredients and records the quantity of each ingredient used in a particular recipe.
+
+\input{figures/data-model}
+
+This design is important because recipe nutrition should not be stored as hardcoded totals. Instead, totals are calculated from ingredient values and quantities. That decision improves consistency and makes the analytical endpoints meaningful. It also demonstrates a more realistic use of relational modelling than a flat CRUD structure would.
+
+\section{API Design and Functionality}
+The API exposes CRUD operations for recipes and ingredients, relationship management endpoints for linking and unlinking ingredients to recipes, and analytics endpoints for nutrition summaries and category counts. Public read endpoints are provided for browsing data, while write endpoints are protected using an API key passed through the \texttt{X-API-Key} header. This authentication model is intentionally lightweight. It introduces an access-control concept without expanding the project into full user registration and session management, which would have added complexity without improving alignment with the coursework goals.
+
+The recipe endpoints support listing, search, retrieval by identifier, creation, update, and deletion. The ingredient endpoints provide the same CRUD structure. In addition, the API supports adding an ingredient to a recipe with a specified quantity and removing an existing recipe-ingredient link. These relationship endpoints are necessary because the nutrition calculations depend on stored composition data rather than directly entered totals.
+
+Two analytical features were added to move the project beyond basic CRUD. The first is a nutrition summary endpoint that calculates total and per-serving calories, protein, fat, and carbohydrates for a given recipe. The second is a category analytics endpoint that counts recipes by category. A search endpoint was also included to support filtered retrieval by category, difficulty, and serving count. Together, these features demonstrate that the API is both data-driven and analytically useful.
+
+\section{Testing and Verification}
+The implementation was developed incrementally with test-first behaviour for each major feature. pytest and FastAPI's \texttt{TestClient} were used to validate endpoint responses, status codes, authentication behaviour, and analytics calculations. A dedicated SQLite test database was configured so that tests could run in isolation from local development data. This was important because API tests that share state with manual usage are difficult to trust and difficult to repeat consistently.
+
+The final test suite covers health checks, missing-resource handling, API key enforcement, recipe CRUD, ingredient CRUD, nutrition aggregation, recipe search, category analytics, and removal of ingredients from recipes. At the point of verification, the command \texttt{python -m pytest app/tests -v} produced fifteen passing tests. This is relevant to the coursework because the marking criteria explicitly reward evidence of testing and effective handling of errors, not just the presence of runnable endpoints.
+
+\section{Challenges and Lessons Learned}
+One concrete implementation issue arose around route matching. Initially, the static recipe search endpoint conflicted with the dynamic recipe identifier route, which caused the framework to interpret the string \texttt{search} as though it were a recipe identifier. The resulting validation failure showed that even small routing decisions can affect API correctness. Reordering the static route before the dynamic route resolved the issue and reinforced the importance of route specificity when designing REST APIs.
+
+Another useful lesson was the value of dependency-based database access. By keeping database sessions behind a shared dependency function, it became straightforward to override the session during testing and point the application at a test-specific SQLite database. This reduced coupling between runtime configuration and test execution and made the test suite much more reliable.
+
+\section{Limitations and Future Work}
+The system has several deliberate limitations. Authentication is implemented with a single API key rather than a full user model, and SQLite is used instead of a more scalable production database such as PostgreSQL. Search functionality currently filters by simple recipe-level fields rather than performing richer aggregate filtering such as maximum calories or allergen exclusion across linked ingredients. In addition, the project has not yet been deployed to a remote hosting platform, although the repository and local execution flow are structured to support that next step.
+
+Future improvements would therefore focus on three areas. First, authentication could be replaced with JWT-based user accounts and role-based permissions. Second, the search and analytics functionality could be expanded to support richer filtering and reporting over linked ingredient data. Third, the database layer could be migrated from SQLite to PostgreSQL to support a more production-oriented deployment story. These changes would strengthen the project further, but they were intentionally left outside the current scope in order to keep the implementation coherent and demonstrable within the coursework timeline.
+
+\section{Version Control, Documentation, and Submission Readiness}
+The repository has been developed with visible commit history so that the progression of the implementation can be inspected during marking. This is important because the coursework brief explicitly states that examiners will examine repository contents and commit history. The README provides setup instructions, run instructions, testing commands, authentication details, and seed-data usage. API documentation is available through FastAPI's generated OpenAPI interface and has also been captured in a separate document that can be converted into the required PDF submission format.
+
+The supporting submission structure also includes a generated technical report PDF, a generated API documentation PDF, and a nine-slide presentation deck with matching speaking notes. The presentation material was strengthened with an entity-relationship diagram, a real browser capture of the FastAPI Swagger UI at \texttt{/docs}, and example API responses generated from the implemented endpoints. This means the repository now contains the main components needed for final submission: runnable source code, automated tests, visible version control, API documentation, report content, and presentation material. The remaining work is therefore mainly final manual review rather than major backend implementation.
+
+\section{Generative AI Declaration}
+Generative AI was used as an active development aid across planning, architecture exploration, implementation sequencing, debugging support, and documentation drafting. It was used to compare backend stack options, refine the project scope around a domain that could support both CRUD and analytics, structure the implementation into manageable milestones, and improve the written presentation of the design. Final judgement over scope, trade-offs, and acceptance of generated outputs remained with the student. Representative conversation logs should be attached in the final submitted appendix in order to satisfy the coursework declaration requirement.
+
+\end{document}

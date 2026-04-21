@@ -2,60 +2,118 @@ module.exports = [
   {
     key: "title",
     title: "Nutrition and Recipe Analytics API",
-    subtitle: "A FastAPI and SQLite data-driven web service with CRUD and nutrition analytics"
+    subtitle: "FastAPI + SQLite coursework project with CRUD, derived nutrition analytics, automated testing, and submission-ready deliverables",
+    kicker: "XJCO3011 Web Services and Web Data",
+    presenter: "Shuyu Cao",
   },
   {
-    key: "motivation",
-    title: "Why This Project",
+    key: "problem_context",
+    title: "Why This Project Is More Than Basic CRUD",
+    label: "PROJECT SCOPE",
+    headline: "A recipe API is a good coursework domain because it needs both transactions and calculation.",
     bullets: [
-      "Recipe and nutrition data supports both CRUD operations and analytical queries",
-      "The domain naturally requires a relational design rather than a single flat table",
-      "The project goes beyond minimum coursework requirements by combining operations with derived results"
-    ]
+      "Recipes and ingredients form a real many-to-many relational model.",
+      "Nutrition totals are derived from linked ingredient quantities rather than typed in manually.",
+      "The API can demonstrate CRUD, validation, authentication, and analytics in one coherent system.",
+    ],
   },
   {
-    key: "stack_architecture",
-    title: "Stack and Architecture",
-    bullets: [
-      "FastAPI, SQLite, SQLAlchemy, Pydantic, pytest",
-      "Client requests flow through routers, schemas, services, models, and the database",
-      "The modular structure improves maintainability and oral-exam explainability"
-    ]
+    key: "architecture",
+    title: "Architecture and Technology Stack",
+    label: "SYSTEM DESIGN",
+    stack: ["FastAPI", "SQLite", "SQLAlchemy", "Pydantic", "pytest"],
+    flow: ["Client", "Routers", "Schemas", "Services", "Models", "SQLite"],
+    notes: [
+      "FastAPI provides typed endpoints and automatic OpenAPI documentation.",
+      "The layered structure makes the code easier to explain, test, and extend.",
+    ],
   },
   {
     key: "data_api",
     title: "Database Design and API Surface",
-    bullets: [
-      "Core entities: recipes, ingredients, recipe_ingredients",
-      "API supports recipe CRUD, ingredient CRUD, link and unlink operations",
-      "Search, nutrition summary, and category analytics extend the API beyond basic CRUD"
-    ]
+    label: "RELATIONAL MODEL",
+    entities: [
+      { name: "recipes", desc: "recipe metadata, category, difficulty, servings, instructions" },
+      { name: "ingredients", desc: "nutrition values per 100g and allergen metadata" },
+      { name: "recipe_ingredients", desc: "join table storing quantity_g for each recipe ingredient" },
+    ],
+    endpoints: [
+      "CRUD: /recipes",
+      "CRUD: /ingredients",
+      "Search: /recipes/search",
+      "Links: /recipes/{id}/ingredients",
+      "Nutrition: /recipes/{id}/nutrition",
+      "Analytics: /analytics/by-category",
+    ],
   },
   {
     key: "quality",
     title: "Security, Validation, and Testing",
+    label: "ENGINEERING QUALITY",
+    stats: [
+      { value: "15", caption: "automated tests" },
+      { value: "401", caption: "unauthorized writes blocked" },
+      { value: "422", caption: "schema validation errors" },
+    ],
     bullets: [
-      "Write operations are protected with X-API-Key authentication",
-      "Pydantic validates request data and status codes follow API conventions",
-      "15 automated tests verify health, CRUD, search, analytics, and relationship behaviour"
-    ]
+      "Write endpoints require the X-API-Key header.",
+      "Pydantic validates payload shape and data types before business logic runs.",
+      "Tests cover CRUD, search, analytics, nutrition aggregation, and relationship removal.",
+    ],
   },
   {
-    key: "demo_challenge",
-    title: "Demo Flow and Technical Challenge",
-    bullets: [
-      "Show repository, README, commit history, and Swagger docs",
-      "Create a recipe, add ingredients, and demonstrate nutrition plus analytics endpoints",
-      "A route conflict between /recipes/search and /{recipe_id} was fixed by reordering routes"
-    ]
+    key: "api_docs",
+    title: "API Documentation Overview",
+    label: "DELIVERABLE 1",
+    highlights: [
+      "Real browser screenshot of Swagger UI at /docs for live demonstration.",
+      "API documentation was also exported into a separate PDF deliverable.",
+      "Response evidence includes authentication, health, nutrition summaries, and analytics output.",
+    ],
+    callouts: ["Real /docs screenshot", "api-documentation.pdf", "Live JSON responses"],
+  },
+  {
+    key: "version_control",
+    title: "Version Control and Deliverables",
+    label: "DELIVERABLES",
+    commits: [
+      "feat: complete recipe crud operations",
+      "feat: add recipe nutrition analytics",
+      "feat: add analytics endpoints and project documentation",
+      "docs: refine report and presentation materials",
+    ],
+    deliverables: [
+      "Public GitHub repository with visible commit history",
+      "README with setup, run, seed, and test instructions",
+      "API documentation PDF, technical report PDF, and presentation deck",
+    ],
+  },
+  {
+    key: "demo_report",
+    title: "Demo Flow and Technical Report Highlights",
+    label: "ORAL EXAM FLOW",
+    demoSteps: [
+      "Open GitHub repository and README",
+      "Show commit history and project deliverables",
+      "Open Swagger /docs",
+      "Create recipe, link ingredients, show nutrition and category analytics",
+    ],
+    reportPoints: [
+      "Rationale for choosing FastAPI, SQLite, and a layered design",
+      "Testing approach, route-conflict lesson, limitations, and future work",
+      "GenAI declaration included transparently in the report",
+    ],
   },
   {
     key: "conclusion",
-    title: "Conclusion and Future Work",
-    bullets: [
-      "The project delivers SQL-backed CRUD, analytics, authentication, testing, and documentation",
-      "Future work includes JWT authentication, richer analytics, and PostgreSQL deployment",
-      "GenAI was used transparently for planning, debugging support, and documentation drafting"
-    ]
-  }
+    title: "Technical Report Highlights and Q&A Readiness",
+    label: "CONCLUSION",
+    outcome: "The project satisfies the coursework brief with a runnable SQL-backed API, visible version history, documentation, testing evidence, and a defensible architecture.",
+    future: [
+      "Upgrade from API key auth to JWT-based authentication",
+      "Expand analytics and richer recipe filtering",
+      "Move from SQLite to PostgreSQL for a stronger deployment story",
+    ],
+    genai: "GenAI was used for planning, debugging support, and documentation drafting, with final technical decisions kept under student control.",
+  },
 ];

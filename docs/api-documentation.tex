@@ -1,0 +1,244 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{parskip}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={API Documentation - Nutrition and Recipe Analytics API},
+    pdfauthor={Shuyu Cao}
+}
+
+\lstdefinestyle{jsonstyle}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    columns=fullflexible
+}
+
+\title{\textbf{API Documentation}\\Nutrition and Recipe Analytics API}
+\author{Shuyu Cao\\XJCO3011 Web Services and Web Data}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+This document describes the Nutrition and Recipe Analytics API implemented for the XJCO3011 coursework project. The API is designed for local execution and demonstration. The local development base URL is \texttt{http://127.0.0.1:8000}, and the interactive OpenAPI documentation is available at \texttt{/docs}. All responses are returned in JSON format.
+
+\section{Authentication}
+Protected write endpoints require an API key in the request header:
+
+\begin{lstlisting}[style=jsonstyle]
+X-API-Key: dev-secret-key
+\end{lstlisting}
+
+If the key is missing or invalid, the API returns a \texttt{401 Unauthorized} response such as:
+
+\begin{lstlisting}[style=jsonstyle]
+{
+  "detail": {
+    "error": "UNAUTHORIZED",
+    "message": "Invalid or missing API key"
+  }
+}
+\end{lstlisting}
+
+\section{Health Endpoint}
+\subsection*{\texttt{GET /health}}
+This endpoint checks whether the API is running.
+
+Example response:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "status": "ok"
+}
+\end{lstlisting}
+
+\section{Recipe Endpoints}
+\subsection*{\texttt{GET /recipes}}
+Returns the full list of stored recipes.
+
+\subsection*{\texttt{GET /recipes/search}}
+Filters recipes using query parameters. The current implementation supports \texttt{category}, \texttt{difficulty}, and \texttt{max\_servings}.
+
+Example request:
+\begin{lstlisting}[style=jsonstyle]
+GET /recipes/search?category=breakfast&difficulty=easy
+\end{lstlisting}
+
+\subsection*{\texttt{GET /recipes/\{recipe\_id\}}}
+Returns a single recipe by identifier.
+
+Not found example:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "detail": {
+    "error": "RESOURCE_NOT_FOUND",
+    "message": "Recipe with id 99 was not found"
+  }
+}
+\end{lstlisting}
+
+\subsection*{\texttt{POST /recipes}}
+Creates a recipe. This endpoint is protected by the API key.
+
+Example request body:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "name": "Berry Oats",
+  "description": "Oats with berries",
+  "category": "breakfast",
+  "difficulty": "easy",
+  "servings": 1,
+  "instructions": "Mix and serve"
+}
+\end{lstlisting}
+
+Successful response status: \texttt{201 Created}.
+
+\subsection*{\texttt{PUT /recipes/\{recipe\_id\}}}
+Updates a recipe. The request body uses the same structure as recipe creation. This endpoint is protected by the API key.
+
+Successful response status: \texttt{200 OK}.
+
+\subsection*{\texttt{DELETE /recipes/\{recipe\_id\}}}
+Deletes a recipe. This endpoint is protected by the API key.
+
+Successful response status: \texttt{204 No Content}.
+
+\section{Ingredient Endpoints}
+\subsection*{\texttt{GET /ingredients}}
+Returns the full list of stored ingredients.
+
+\subsection*{\texttt{GET /ingredients/\{ingredient\_id\}}}
+Returns a single ingredient by identifier.
+
+\subsection*{\texttt{POST /ingredients}}
+Creates an ingredient. This endpoint is protected by the API key.
+
+Example request body:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "name": "Greek Yogurt",
+  "calories_per_100g": 65,
+  "protein_per_100g": 11,
+  "fat_per_100g": 0.5,
+  "carbs_per_100g": 4.0,
+  "contains_allergen": true,
+  "allergen_notes": "milk"
+}
+\end{lstlisting}
+
+Validation failures return \texttt{422 Unprocessable Entity}.
+
+\subsection*{\texttt{PUT /ingredients/\{ingredient\_id\}}}
+Updates an ingredient. This endpoint is protected by the API key.
+
+\subsection*{\texttt{DELETE /ingredients/\{ingredient\_id\}}}
+Deletes an ingredient. This endpoint is protected by the API key.
+
+\section{Recipe-Ingredient Relationship Endpoints}
+\subsection*{\texttt{POST /recipes/\{recipe\_id\}/ingredients}}
+Links an ingredient to a recipe with a specified quantity in grams. This endpoint is protected by the API key.
+
+Example request body:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "ingredient_id": 2,
+  "quantity_g": 100
+}
+\end{lstlisting}
+
+Successful response:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "status": "linked"
+}
+\end{lstlisting}
+
+\subsection*{\texttt{DELETE /recipes/\{recipe\_id\}/ingredients/\{ingredient\_id\}}}
+Removes an ingredient from a recipe. This endpoint is protected by the API key.
+
+Successful response status: \texttt{204 No Content}.
+
+If the relationship does not exist, the API returns:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "detail": {
+    "error": "RESOURCE_NOT_FOUND",
+    "message": "Ingredient 2 was not linked to recipe 1"
+  }
+}
+\end{lstlisting}
+
+\section{Analytics Endpoints}
+\subsection*{\texttt{GET /recipes/\{recipe\_id\}/nutrition}}
+Calculates total and per-serving nutrition for a recipe.
+
+Example response:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "recipe_id": 1,
+  "recipe_name": "Banana Yogurt Bowl",
+  "servings": 2,
+  "total": {
+    "calories": 209.0,
+    "protein": 21.1,
+    "fat": 4.3,
+    "carbs": 30.8
+  },
+  "per_serving": {
+    "calories": 104.5,
+    "protein": 10.55,
+    "fat": 2.15,
+    "carbs": 15.4
+  }
+}
+\end{lstlisting}
+
+\subsection*{\texttt{GET /analytics/recipes/by-category}}
+Returns recipe counts grouped by category.
+
+Example response:
+\begin{lstlisting}[style=jsonstyle]
+{
+  "categories": [
+    {
+      "category": "breakfast",
+      "recipe_count": 3
+    },
+    {
+      "category": "lunch",
+      "recipe_count": 1
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{HTTP Status Codes}
+\begin{itemize}
+    \item \texttt{200 OK}: successful read or update
+    \item \texttt{201 Created}: successful create
+    \item \texttt{204 No Content}: successful delete
+    \item \texttt{401 Unauthorized}: missing or invalid API key
+    \item \texttt{404 Not Found}: resource or relationship not found
+    \item \texttt{422 Unprocessable Entity}: validation failure
+\end{itemize}
+
+\section{Running the API}
+\begin{lstlisting}[style=jsonstyle]
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python -m uvicorn app.main:app --reload
+\end{lstlisting}
+
+\end{document}

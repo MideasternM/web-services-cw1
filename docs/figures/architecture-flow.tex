@@ -1,0 +1,20 @@
+\begin{figure}[htbp]
+\centering
+\setlength{\fboxsep}{8pt}
+\begin{tabular}{c c c c c c}
+\fbox{\textbf{Client}} &
+$\rightarrow$ &
+\fbox{\textbf{FastAPI routers}} &
+$\rightarrow$ &
+\fbox{\textbf{Pydantic schemas}} &
+$\rightarrow$ \\
+ & & & & & \\
+\fbox{\textbf{Service logic}} &
+$\rightarrow$ &
+\fbox{\textbf{SQLAlchemy models}} &
+$\rightarrow$ &
+\fbox{\textbf{SQLite database}} &
+\end{tabular}
+\caption{Layered request flow used by the Nutrition and Recipe Analytics API.}
+\label{fig:architecture-flow}
+\end{figure}

@@ -6,7 +6,7 @@ import zipfile
 
 TESTS_DIR = Path(__file__).resolve().parent
 SLIDES_DIR = TESTS_DIR.parent
-OUTPUT = SLIDES_DIR / "output" / "nutrition-api-deck.pptx"
+OUTPUT = SLIDES_DIR / "output" / "nutrition-api-deck-updated.pptx"
 ASSETS_DIR = SLIDES_DIR / "assets"
 
 

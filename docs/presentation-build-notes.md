@@ -18,6 +18,12 @@ Generated file:
 slides/output/nutrition-api-deck.pptx
 ```
 
+Current enhanced deck committed in the repository:
+
+```text
+slides/output/nutrition-api-deck-updated.pptx
+```
+
 ## Verify the deck
 
 From the project root:
@@ -29,7 +35,7 @@ From the project root:
 Optional text extraction check:
 
 ```powershell
-.\.venv\Scripts\python -m markitdown slides/output/nutrition-api-deck.pptx
+.\.venv\Scripts\python -m markitdown slides/output/nutrition-api-deck-updated.pptx
 ```
 
 Rendered QA images can be exported through PowerPoint into `slides/output/rendered-final-*` when a visual spacing check is needed. These rendered folders are temporary and are ignored by git.

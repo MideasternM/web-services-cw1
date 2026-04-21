@@ -51,13 +51,13 @@ X-API-Key: dev-secret-key
 - API documentation through FastAPI OpenAPI and `/docs`
 - API documentation PDF: `docs/api-documentation.pdf`
 - Technical report PDF: `docs/technical-report.pdf`
-- Presentation deck: `slides/output/nutrition-api-deck.pptx`
+- Presentation deck: `slides/output/nutrition-api-deck-updated.pptx`
 - Presentation outline and speaking notes: `docs/presentation-outline.md`
 
 ## Presentation
 
 Generated deck:
-`slides/output/nutrition-api-deck.pptx`
+`slides/output/nutrition-api-deck-updated.pptx`
 
 Build notes:
 `docs/presentation-build-notes.md`

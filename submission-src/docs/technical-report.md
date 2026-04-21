@@ -79,7 +79,7 @@ Another useful lesson was the value of dependency-based database access. By keep
 
 ## 7. Limitations and Future Work
 
-The system has several deliberate limitations. Authentication is implemented with a single API key rather than a full user model, and SQLite is used instead of a more scalable production database such as PostgreSQL. Search functionality currently filters by simple recipe-level fields rather than performing richer aggregate filtering such as maximum calories or allergen exclusion across linked ingredients. A PythonAnywhere deployment target has been configured for remote demonstration, but it still uses a lightweight configuration model and requires final package installation on the hosting side before it can be treated as a fully stable hosted service.
+The system has several deliberate limitations. Authentication is implemented with a single API key rather than a full user model, and SQLite is used instead of a more scalable production database such as PostgreSQL. Search functionality currently filters by simple recipe-level fields rather than performing richer aggregate filtering such as maximum calories or allergen exclusion across linked ingredients. The current PythonAnywhere deployment is appropriate for coursework demonstration, but it still uses a lightweight configuration model rather than a production-grade cloud deployment pipeline.
 
 Future improvements would therefore focus on three areas. First, authentication could be replaced with JWT-based user accounts and role-based permissions. Second, the search and analytics functionality could be expanded to support richer filtering and reporting over linked ingredient data. Third, the database layer could be migrated from SQLite to PostgreSQL to support a more production-oriented deployment story. These changes would strengthen the project further, but they were intentionally left outside the current scope in order to keep the implementation coherent and demonstrable within the coursework timeline.
 
@@ -87,19 +87,19 @@ Future improvements would therefore focus on three areas. First, authentication 
 
 The repository has been developed with visible commit history so that the progression of the implementation can be inspected during marking. This is important because the coursework brief explicitly states that examiners will examine repository contents and commit history. The README provides setup instructions, run instructions, testing commands, authentication details, and seed-data usage. API documentation is available through FastAPI's generated OpenAPI interface and has also been captured in a separate PDF submission document.
 
-The supporting submission structure also includes a generated technical report PDF, a generated API documentation PDF, and a presentation deck with matching speaking notes. The presentation material was strengthened with an entity-relationship diagram, a real browser capture of the FastAPI Swagger UI at `/docs`, and example API responses generated from the implemented endpoints. In addition, a PythonAnywhere deployment target has been prepared so that the project can be exposed through a public URL once the remote runtime dependencies are installed.
+The supporting submission structure also includes a generated technical report PDF, a generated API documentation PDF, and a presentation deck with matching speaking notes. The presentation material was strengthened with an entity-relationship diagram, a real browser capture of the FastAPI Swagger UI at `/docs`, and example API responses generated from the implemented endpoints. In addition, the application is now available through a live PythonAnywhere deployment, which means the project can be inspected both through repository artefacts and through a public running service.
 
 Key submission links:
 
 - GitHub repository: `https://github.com/MideasternM/web-services-cw1`
-- PythonAnywhere deployment target: `https://MideasternM.pythonanywhere.com`
-- Swagger UI target: `https://MideasternM.pythonanywhere.com/docs`
+- Live API base URL: `https://MideasternM.pythonanywhere.com`
+- Live Swagger UI: `https://MideasternM.pythonanywhere.com/docs`
 - API documentation PDF on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/docs/api-documentation.pdf`
 - Technical report PDF on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/docs/technical-report.pdf`
 - Presentation deck on GitHub: `https://github.com/MideasternM/web-services-cw1/blob/feature/nutrition-api/slides/nutrition-api-deck-updated.pptx`
 - Supporting slide-source and visual-material directory: `https://github.com/MideasternM/web-services-cw1/tree/feature/nutrition-api/submission-src/slides`
 
-This means the repository now contains the main components needed for final submission: runnable source code, automated tests, visible version control, API documentation, report content, deployment configuration, and presentation material.
+This means the repository now contains the main components needed for final submission: runnable source code, automated tests, visible version control, API documentation, report content, live deployment access, and presentation material.
 
 ## 9. Generative AI Declaration
 

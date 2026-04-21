@@ -1,6 +1,6 @@
 # PythonAnywhere Deployment
 
-This project is configured for PythonAnywhere as an ASGI FastAPI app.
+This project is deployed on PythonAnywhere as an ASGI FastAPI app.
 
 ## Live URLs
 
@@ -8,7 +8,7 @@ This project is configured for PythonAnywhere as an ASGI FastAPI app.
 - Health endpoint: `https://MideasternM.pythonanywhere.com/health`
 - Swagger UI: `https://MideasternM.pythonanywhere.com/docs`
 
-At the time of writing, the PythonAnywhere web app and domain are already created. The remaining manual step on the PythonAnywhere side is to install the runtime dependencies in the account environment so that `uvicorn` is available.
+The PythonAnywhere web app is live and serving the FastAPI application.
 
 ## Runtime configuration
 
